@@ -1,7 +1,9 @@
+import { MainService } from './../service/main.service';
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Anotacao } from '../model/anotacao.model';
 
 @Component({
   templateUrl: 'app.html'
@@ -9,18 +11,31 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
+  anotacao: Anotacao[];
+  
   rootPage: string = 'HomePage';
 
   pages: Array<{title: string, component: string}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(
+    public platform: Platform,
+    public statusBar: StatusBar,
+    public splashScreen: SplashScreen,
+    private mainService: MainService) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: 'HomePage' }
     ];
-
+    this.anotacao = [];
+    this.mainService.findAll().subscribe(
+      res => {
+        this.anotacao = res;
+      },
+      error => {
+        console.log('Error: ', error);
+      })
   }
 
   initializeApp() {
